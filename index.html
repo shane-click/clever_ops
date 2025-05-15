@@ -13,10 +13,11 @@
       --gold: #F5B720;
       --grey: #F5F7FA;
     }
-    * {
-      box-sizing: border-box;
-      margin: 0; padding: 0;
+    html, body {
+      margin: 0;
+      padding: 0;
     }
+    /* Prevent horizontal scroll on small screens */
     body {
       font-family: Arial, sans-serif;
       color: var(--navy);
@@ -25,6 +26,8 @@
       scroll-behavior: smooth;
       transition: background 0.3s, color 0.3s;
       position: relative;
+      max-width: 100%;
+      overflow-x: hidden;
     }
     h1, h2, h3 {
       font-family: "Poppins", Arial, sans-serif;
@@ -44,24 +47,30 @@
     }
     nav {
       display: flex;
+      flex-wrap: wrap;  /* lets elements wrap on small screens */
       align-items: center;
+      justify-content: space-between;
       padding: 1rem;
+      gap: 1rem;
     }
-    /* Brand to the left, nav links in middle, toggle far right */
+    /* Brand on the left */
     .brand {
-      display: flex; 
+      display: flex;
       align-items: center;
       gap: 0.5rem;
-      margin-right: auto;
+      flex-shrink: 0;
     }
     .brand img {
-      height: 60px; /* Adjust size as needed */
+      height: 50px;  /* smaller default so it doesn't push layout wide */
       width: auto;
     }
+    /* Nav links in the middle, can wrap if needed */
     .nav-links {
       display: flex;
-      gap: 2rem;
-      margin-right: 1.5rem; /* space before toggle */
+      gap: 1.5rem;
+      flex-wrap: wrap; /* if you have many links, they can flow to next line */
+      margin-left: auto; /* push them right if there's space */
+      margin-right: 1rem;
     }
     .nav-links a {
       color: var(--navy);
@@ -71,12 +80,12 @@
     .nav-links a:hover {
       color: var(--gold);
     }
-
-    /* Toggle switch to the far right */
+    /* Toggle switch (far right) */
     .toggle-switch {
       position: relative;
       width: 40px;
       height: 20px;
+      flex-shrink: 0; /* prevent it from shrinking */
     }
     .toggle-switch input[type="checkbox"] {
       opacity: 0;
@@ -116,7 +125,6 @@
       text-align: center;
       padding: 6rem 0 5rem;
       background: linear-gradient(135deg, var(--grey) 0%, #ffffff 100%);
-      transition: background 0.3s;
     }
     .hero h1 {
       font-size: clamp(2rem, 5vw + 1rem, 3rem);
@@ -183,7 +191,7 @@
       padding: 2rem;
       background: #fff;
       border-radius: 12px;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
       margin-bottom: 2rem;
     }
     .testimonial-slide.active {
@@ -211,7 +219,7 @@
       font-weight: 600;
     }
     .carousel-btn:hover {
-      background: #ffca2e; /* slightly lighter gold */
+      background: #ffca2e;
     }
 
     /* FAQ */
@@ -281,13 +289,6 @@
       max-width: 600px;
       margin: auto;
     }
-    .contact input, .contact textarea {
-      padding: 0.8rem 1rem;
-      border: 1px solid #d0d7e0;
-      border-radius: 6px;
-      font-size: 1rem;
-      resize: vertical;
-    }
 
     /* Footer */
     footer {
@@ -337,11 +338,11 @@
       transition: transform 0.2s;
       z-index: 999;
     }
-    /* Mobile-first: show near bottom */
+    /* Mobile-first: phone icon near bottom */
     .floating-phone {
       bottom: 80px;
     }
-    /* On bigger screens: halfway up the screen (centered vertically) */
+    /* On desktops, move it halfway up */
     @media (min-width:768px) {
       .floating-phone {
         top: 50%; bottom: auto;
@@ -357,12 +358,13 @@
     }
 
     /* Dark Mode */
+    #logo-dark { display: none; }
     body.dark-mode {
       background: var(--navy);
       color: var(--grey);
     }
     body.dark-mode header {
-      background: rgba(10, 20, 71, 0.95);
+      background: rgba(10,20,71,0.95);
     }
     body.dark-mode nav a {
       color: var(--grey);
@@ -384,7 +386,8 @@
       background: #182a5d; color: #fff;
       box-shadow: 0 6px 18px rgba(255,255,255,0.05);
     }
-    body.dark-mode .contact input, body.dark-mode .contact textarea {
+    body.dark-mode .contact input, 
+    body.dark-mode .contact textarea {
       background: #182a5d; color: #fff;
       border: 1px solid #2f4a8d;
     }
@@ -406,21 +409,18 @@
     body.dark-mode .faq-answer {
       background: #182a5d; color: #ffffff;
     }
-    #logo-dark { display: none; }
   </style>
 </head>
 <body>
   <!-- Header -->
   <header>
     <nav>
-      <!-- Brand on left -->
+      <!-- Brand -->
       <div class="brand">
-        <!-- Light mode logo -->
-        <img id="logo-light" src="clever-ops-logo-light.png" alt="Clever Ops – Light" />
-        <!-- Dark mode logo (hidden by default) -->
-        <img id="logo-dark" src="clever-ops-logo-dark.png" alt="Clever Ops – Dark" style="display:none;" />
+        <img id="logo-light" src="clever-ops-logo-light.png" alt="Clever Ops – Light Logo" />
+        <img id="logo-dark" src="clever-ops-logo-dark.png" alt="Clever Ops – Dark Logo" style="display:none;" />
       </div>
-      <!-- Nav links + toggle on right -->
+      <!-- Nav links -->
       <ul class="nav-links">
         <li><a href="#services">Services</a></li>
         <li><a href="#about">About</a></li>
@@ -428,6 +428,7 @@
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
+      <!-- Toggle Switch -->
       <div class="toggle-switch">
         <input type="checkbox" id="theme-switch"/>
         <label for="theme-switch"></label>
@@ -538,7 +539,7 @@
     <div class="container" style="text-align:center;">
       <h2>Let’s Automate Your Ops</h2>
       <p>Drop us a message and we’ll schedule a quick call to explore solutions.</p>
-      <!-- Replace "your-form-id" with your actual Formspree ID -->
+      <!-- Replace "your-form-id" with your Formspree ID -->
       <form action="https://formspree.io/f/your-form-id" method="POST">
         <input type="text" name="name" placeholder="Name" required />
         <input type="email" name="email" placeholder="Email" required />
@@ -557,17 +558,15 @@
   <!-- Back to Top -->
   <button id="back-to-top" title="Go to top">↑</button>
 
-  <!-- Floating phone icon: 
-       "tel:" link for actual phone; replace with your real number -->
+  <!-- Floating phone icon -->
   <a href="tel:+1234567890" class="floating-phone" title="Call Us">
-    <!-- Simple phone SVG -->
     <svg viewBox="0 0 512 512">
       <path d="M391.585 351.318l-61.117-61.117a32 32 0 0 0-45.248.442l-19.882 20.055a16 16 0 0 1-20.5 2.42 299.43 299.43 0 0 1-86.654-86.651 16 16 0 0 1 2.42-20.5l20.056-19.88a32 32 0 0 0 .442-45.247L160.683 120.418a32 32 0 0 0-45.234-.461l-28.07 27.87a63.999 63.999 0 0 0-18.58 45.392c.003 172.219 139.558 311.695 311.777 311.695a64.001 64.001 0 0 0 45.434-18.582l27.862-28.07a32 32 0 0 0-.457-45.244z"/>
     </svg>
   </a>
 
   <script>
-    // Day/night toggle
+    // Day/Night Toggle
     const themeSwitch = document.getElementById('theme-switch');
     const logoLight = document.getElementById('logo-light');
     const logoDark = document.getElementById('logo-dark');
@@ -584,7 +583,7 @@
       });
     }
 
-    // Testimonial carousel
+    // Testimonials
     const slides = document.querySelectorAll('.testimonial-slide');
     const btns = document.querySelectorAll('.carousel-btn');
     btns.forEach(btn => {
@@ -594,7 +593,7 @@
       });
     });
 
-    // FAQ accordion
+    // FAQ Accordion
     const faqQuestions = document.querySelectorAll('.faq-question');
     faqQuestions.forEach(question => {
       question.addEventListener('click', () => {
@@ -603,7 +602,7 @@
       });
     });
 
-    // Back to top
+    // Back to Top
     const backToTopBtn = document.getElementById('back-to-top');
     window.addEventListener('scroll', () => {
       if (window.scrollY > 300) {
