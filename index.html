@@ -61,8 +61,12 @@
       flex-shrink: 0;
     }
     .brand img {
-      height: 200px;  /* smaller default so it doesn't push layout wide */
-      width: auto;
+      height: 50px;  /* smaller default so it doesn't push layout wide */
+    }
+    @media (min-width: 768px){
+      .brand img {
+        height: 100px;
+      }
     }
     /* Nav links in the middle, can wrap if needed */
     .nav-links {
