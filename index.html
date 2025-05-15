@@ -16,16 +16,19 @@
     html, body {
       margin: 0; padding: 0;
     }
+    /* Default to dark mode */
+    body.dark-mode {
+      background: var(--navy);
+      color: var(--grey);
+    }
     body {
       font-family: Arial, sans-serif;
-      color: var(--navy);
-      background: #ffffff;
       line-height: 1.6;
       scroll-behavior: smooth;
       transition: background 0.3s, color 0.3s;
       position: relative;
       max-width: 100%;
-      overflow-x: hidden; /* prevent horizontal scroll */
+      overflow-x: hidden;
     }
     h1, h2, h3 {
       font-family: "Poppins", Arial, sans-serif;
@@ -65,15 +68,21 @@
       gap: 0.5rem;
       flex-shrink: 0;
     }
+    /* Dark logo is shown by default, light is hidden so we start in dark mode */
+    #logo-light {
+      display: none;
+    }
+    #logo-dark {
+      display: block;
+    }
     .brand img {
-      height: 150px;
-      width: auto;
+      height: 60px; width: auto;
     }
     .nav-links {
       display: flex;
       gap: 1.5rem;
       flex-wrap: wrap;
-      margin-left: auto; 
+      margin-left: auto;
       margin-right: 1rem;
     }
     .nav-links a {
@@ -85,7 +94,7 @@
       color: var(--gold);
     }
 
-    /* Day/Night Circle, 48x48, above phone on mobile */
+    /* Day/Night Circle, 48x48 */
     .daynight-circle {
       position: fixed;
       right: 20px;
@@ -97,23 +106,85 @@
       z-index: 999;
       transition: transform 0.2s;
       background: linear-gradient(to right, var(--gold) 50%, var(--navy) 50%);
-      display: flex; 
+      display: flex;
       align-items: center;
       justify-content: center;
     }
-    /* On mobile, separate them by 60px (80px for phone, 140px for circle) */
+    /* On mobile, stack them with 70px gap:
+       phone bottom:80 => sms bottom:150 => day/night bottom:220 */
     .daynight-circle {
-      bottom: 140px; /* phone is at bottom: 80px */
+      bottom: 220px;
     }
     .daynight-circle:hover {
       transform: translateY(-2px);
     }
-    /* On desktop: place them at different top percentages so no overlap */
+
+    /* SMS button, 48x48, sits between day/night & phone */
+    .floating-sms {
+      position: fixed;
+      right: 20px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: var(--navy);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: transform 0.2s;
+      z-index: 999;
+    }
+    .floating-sms:hover {
+      transform: translateY(-2px);
+    }
+    /* On mobile: default to bottom:150 => daynight=220 => phone=80 */
+    .floating-sms {
+      bottom: 150px;
+    }
+
+    /* Phone icon, 48x48 */
+    .floating-phone {
+      position: fixed;
+      right: 20px;
+      width: 48px; height: 48px;
+      background: var(--gold);
+      color: var(--navy);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      text-decoration: none;
+      transition: transform 0.2s;
+      z-index: 999;
+      bottom: 80px; /* on mobile */
+    }
+
+    /* Desktop positions so they don't overlap, spaced vertically */
     @media (min-width:768px) {
       .daynight-circle {
-        top: 40%; bottom: auto;
-        transform: translateY(-40%);
+        top: 30%; bottom: auto;
+        transform: translateY(-30%);
       }
+      .floating-sms {
+        top: 45%; bottom: auto;
+        transform: translateY(-45%);
+      }
+      .floating-phone {
+        top: 60%; bottom: auto;
+        transform: translateY(-60%);
+      }
+    }
+    .floating-phone:hover {
+      transform: translateY(-2px);
+    }
+    /* Icon sizes inside the circle */
+    .floating-phone svg,
+    .floating-sms svg {
+      width: 24px; height: 24px;
+      fill: var(--navy);
     }
 
     /* Hero */
@@ -314,58 +385,18 @@
 
     /* Footer */
     footer {
-      background: var(--navy);
+      background: #182a5d;
       color: #fff;
       text-align: center;
       padding: 2rem 1rem;
+      transition: background 0.3s;
     }
     footer a {
       color: var(--gold);
       text-decoration: none;
     }
 
-    /* Floating phone icon */
-    .floating-phone {
-      position: fixed;
-      right: 20px;
-      width: 48px; 
-      height: 48px;
-      background: var(--gold);
-      color: var(--navy);
-      border-radius: 50%;
-      display: flex;
-      align-items: center; 
-      justify-content: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      text-decoration: none;
-      transition: transform 0.2s;
-      z-index: 999;
-    }
-    /* Mobile-first: near bottom */
-    .floating-phone {
-      bottom: 80px;
-    }
-    @media (min-width:768px) {
-      .floating-phone {
-        top: 60%; /* Day/night circle at 40%, phone at 60% => 20% gap */
-        bottom: auto;
-        transform: translateY(-60%);
-      }
-    }
-    .floating-phone:hover {
-      transform: translateY(-2px);
-    }
-    .floating-phone svg {
-      width: 24px; height: 24px;
-      fill: var(--navy);
-    }
-
-    /* Dark Mode */
-    #logo-dark { display: none; }
-    body.dark-mode {
-      background: var(--navy);
-      color: var(--grey);
-    }
+    /* Dark Mode Overwrites */
     body.dark-mode header {
       background: rgba(10,20,71,0.95);
     }
@@ -413,18 +444,17 @@
       color: #ffffff;
       border: 1px solid #3e589e;
     }
-    body.dark-mode footer {
-      background: #182a5d;
-    }
   </style>
 </head>
-<body>
+<!-- Body default is dark-mode -->
+<body class="dark-mode">
   <!-- Header -->
   <header>
     <nav>
       <div class="brand">
+        <!-- Dark logo shown by default in dark mode -->
         <img id="logo-light" src="clever-ops-logo-light.png" alt="Clever Ops – Light Logo" />
-        <img id="logo-dark" src="clever-ops-logo-dark.png" alt="Clever Ops – Dark Logo" style="display:none;" />
+        <img id="logo-dark" src="clever-ops-logo-dark.png" alt="Clever Ops – Dark Logo" />
       </div>
       <ul class="nav-links">
         <li><a href="#services">Services</a></li>
@@ -436,8 +466,23 @@
     </nav>
   </header>
 
-  <!-- Floating Day/Night Circle -->
+  <!-- Day/Night Toggle Circle -->
   <div class="daynight-circle" id="daynight-toggle" title="Toggle Light/Dark"></div>
+
+  <!-- SMS Button -->
+  <a href="sms:+61413551231" class="floating-sms" title="Send SMS">
+    <!-- You can use a chat bubble icon, e.g. -->
+    <svg viewBox="0 0 512 512">
+      <path d="M256 32C114.6 32 0 125.1 0 240c0 49 22.4 93.9 59.7 129.8C48.4 414.1 27.4 430.1 27 430.4c-4.4 3.6-6.1 9.4-4.2 14.7s7 9 12.5 9c66.2 0 116.1-31.5 138.2-46.1 24.2 8.1 50.6 13 82.5 13 141.4 0 256-93.1 256-208S397.4 32 256 32z"/>
+    </svg>
+  </a>
+
+  <!-- Phone Icon -->
+  <a href="tel:+61413551231" class="floating-phone" title="Call Us">
+    <svg viewBox="0 0 512 512">
+      <path d="M391.585 351.318l-61.117-61.117a32 32 0 0 0-45.248.442l-19.882 20.055a16 16 0 0 1-20.5 2.42 299.43 299.43 0 0 1-86.654-86.651 16 16 0 0 1 2.42-20.5l20.056-19.88a32 32 0 0 0 .442-45.247L160.683 120.418a32 32 0 0 0-45.234-.461l-28.07 27.87a63.999 63.999 0 0 0-18.58 45.392c.003 172.219 139.558 311.695 311.777 311.695a64.001 64.001 0 0 0 45.434-18.582l27.862-28.07a32 32 0 0 0-.457-45.244z"/>
+    </svg>
+  </a>
 
   <!-- Hero -->
   <section class="hero" id="home">
@@ -540,13 +585,13 @@
   <!-- Contact -->
   <section class="contact" id="contact" style="padding-bottom:4rem;">
     <div class="container" style="text-align:center;">
-      <h2>Let’s Automate Your Business</h2>
+      <h2>Let’s Automate Your Ops</h2>
       <p>Drop us a message and we’ll schedule a quick call to explore solutions.</p>
       <div class="contact-card">
         <!-- Replace "your-form-id" with your actual Formspree ID -->
         <form action="https://formspree.io/f/your-form-id" method="POST">
           <input type="text" name="name" placeholder="Name" required />
-          <input type="tel" name="phone" placeholder="Phone Number" required />
+          <input type="tel" name="phone" placeholder="Phone Number (+61413551231)" required />
           <input type="email" name="email" placeholder="Email" required />
           <textarea name="message" rows="4" placeholder="Tell us about your biggest ops headache…"></textarea>
           <button type="submit" class="btn" style="border:none;cursor:pointer;">Send Message</button>
@@ -558,18 +603,11 @@
   <!-- Footer -->
   <footer>
     <p>&copy; <script>document.write(new Date().getFullYear());</script> Clever Ops. All rights reserved.</p>
-    <p><a href="mailto:hello@cleverops.com.au">hello@cleverops..com.au</a></p>
+    <p><a href="mailto:hello@cleverops.com.au">hello@cleverops.com.au</a></p>
   </footer>
 
-  <!-- Floating phone icon -->
-  <a href="tel:+61413551231" class="floating-phone" title="Call Us">
-    <svg viewBox="0 0 512 512">
-      <path d="M391.585 351.318l-61.117-61.117a32 32 0 0 0-45.248.442l-19.882 20.055a16 16 0 0 1-20.5 2.42 299.43 299.43 0 0 1-86.654-86.651 16 16 0 0 1 2.42-20.5l20.056-19.88a32 32 0 0 0 .442-45.247L160.683 120.418a32 32 0 0 0-45.234-.461l-28.07 27.87a63.999 63.999 0 0 0-18.58 45.392c.003 172.219 139.558 311.695 311.777 311.695a64.001 64.001 0 0 0 45.434-18.582l27.862-28.07a32 32 0 0 0-.457-45.244z"/>
-    </svg>
-  </a>
-
   <script>
-    // Circle for day/night toggle
+    // Day/Night Toggle
     const daynightToggle = document.getElementById('daynight-toggle');
     const logoLight = document.getElementById('logo-light');
     const logoDark = document.getElementById('logo-dark');
@@ -578,9 +616,11 @@
       daynightToggle.addEventListener('click', () => {
         document.body.classList.toggle('dark-mode');
         if (document.body.classList.contains('dark-mode')) {
+          // Switch to dark
           logoLight.style.display = 'none';
           logoDark.style.display = 'block';
         } else {
+          // Switch to light
           logoDark.style.display = 'none';
           logoLight.style.display = 'block';
         }
